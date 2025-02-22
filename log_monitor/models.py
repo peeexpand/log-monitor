@@ -60,6 +60,9 @@ class Task:
         else:
             return ""
 
+    def has_remark(self) -> str:
+        return self.get_remark() != ""
+
     def __str__(self) -> str:
         return (
             f"[{self.pid}] Task {self.get_status()} | "

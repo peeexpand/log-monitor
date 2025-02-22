@@ -1,3 +1,5 @@
 from log_monitor.monitor import LogMonitor
 
-LogMonitor().parse_log()
+monitor = LogMonitor()
+monitor.parse_log()
+monitor.generate_report()

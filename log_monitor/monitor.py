@@ -70,3 +70,12 @@ class LogMonitor:
             for task in self.tasks.values():
                 if task.duration is None:
                     print(task)
+
+    def generate_report(self):
+        """
+        Generate task report and save to report file.
+        Report will include only the task that contian remarks.
+        """
+        with open("report.txt", "w") as file:
+            for task in [c for c in self.completed_tasks if c.has_remark()]:
+                file.write(str(task) + "\n")
