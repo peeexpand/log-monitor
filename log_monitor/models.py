@@ -1,4 +1,16 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+from enum import Enum
+
+from .config import ERROR_THRESHOLD, WARNING_THRESHOLD
+
+
+class TaskStatus(Enum):
+    """
+    Enum representing possible task status.
+    """
+
+    START = "START"
+    END = "END"
 
 
 class Task:
@@ -53,9 +65,9 @@ class Task:
             return "WARNING: Task start time not found."
         elif self.end_time is None:
             return "WARNING: Task is still in progress."
-        elif self.duration > timedelta(minutes=10):
+        elif self.duration > ERROR_THRESHOLD:
             return "ERROR: This task took longer than 10 minutes."
-        elif self.duration > timedelta(minutes=5):
+        elif self.duration > WARNING_THRESHOLD:
             return "WARNING: This task took longer than 5 minutes."
         else:
             return ""

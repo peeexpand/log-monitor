@@ -1,7 +1,8 @@
 import csv
 from datetime import datetime
 
-from .models import Task
+from .config import LOG_FILE_LOCATION, REPORT_FILE_LOCATION
+from .models import Task, TaskStatus
 
 
 class LogMonitor:
@@ -10,9 +11,6 @@ class LogMonitor:
     """
 
     def __init__(self):
-        # Logs file location
-        self.log_file = "logs.log"
-
         # Dictionary to store processing tasks: { PID: Task Object }
         self.tasks: dict[int, Task] = {}
 
@@ -29,7 +27,7 @@ class LogMonitor:
         - Task status (START, END)
         - Task PID
         """
-        with open(self.log_file, "r") as f:
+        with open(LOG_FILE_LOCATION, "r") as f:
             reader = csv.reader(f)
             for row in reader:
                 # Strip whitespace from each field in the row
@@ -41,7 +39,7 @@ class LogMonitor:
                 timestamp = datetime.strptime(timestamp, "%H:%M:%S")
 
                 # identify task status
-                if status == "START":
+                if status == TaskStatus.START.value:
                     # Create a new task entry when a task starts
                     self.tasks[pid] = Task(
                         pid=pid,
@@ -49,7 +47,7 @@ class LogMonitor:
                         description=description,
                     )
 
-                elif status == "END":
+                elif status == TaskStatus.END.value:
                     # Check if the task exists, mark it as completed
                     # Otherwise create a new dangling Task
                     if pid in self.tasks:
@@ -76,6 +74,6 @@ class LogMonitor:
         Generate task report and save to report file.
         Report will include only the task that contian remarks.
         """
-        with open("report.txt", "w") as file:
+        with open(REPORT_FILE_LOCATION, "w") as file:
             for task in [c for c in self.completed_tasks if c.has_remark()]:
                 file.write(str(task) + "\n")
